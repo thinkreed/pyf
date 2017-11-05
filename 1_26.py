@@ -1,0 +1,3 @@
+name = 'thinkreed'
+
+print(name)
