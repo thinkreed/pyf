@@ -144,6 +144,8 @@ def create_empty_user_information_dictionary():
 #   - If the user has no connections, return an empty list.
 #   - If the user is not in network, return None.
 def get_connections(network, user):
+    if user in network:
+        return network[user][key_connections]
     return []
 
 
@@ -160,6 +162,8 @@ def get_connections(network, user):
 #   - If the user likes no games, return an empty list.
 #   - If the user is not in network, return None.
 def get_games_liked(network, user):
+    if user in network:
+        return network[user][key_likes]
     return []
 
 
@@ -178,6 +182,13 @@ def get_games_liked(network, user):
 #   - If a connection already exists from user_A to user_B, return network unchanged.
 #   - If user_A or user_B is not in network, return False.
 def add_connection(network, user_A, user_B):
+    if user_A not in network or user_B not in network:
+        return False
+    if user_A in network[user_B][key_connections]:
+        return network
+
+    network[user_B][key_connections].append(user_A)
+
     return network
 
 
@@ -199,6 +210,10 @@ def add_connection(network, user_A, user_B):
 #   - If the user already exists in network, return network *UNCHANGED* (do not change
 #     the user's game preferences)
 def add_new_user(network, user, games):
+    if user in network:
+        return network
+    network[user] = create_empty_user_information_dictionary()
+    network[user][key_likes] = games
     return network
 
 
@@ -221,7 +236,14 @@ def add_new_user(network, user, games):
 #   himself/herself. It is also OK if the list contains a user's primary
 #   connection that is a secondary connection as well.
 def get_secondary_connections(network, user):
-    return []
+    if user not in network:
+        return None
+    result = []
+    for connection in network[user][key_connections]:
+        if connection in network:
+            result = result + network[connection][key_connections]
+
+    return result
 
 
 # -----------------------------------------------------------------------------
@@ -237,7 +259,13 @@ def get_secondary_connections(network, user):
 #   The number of connections in common (as an integer).
 #   - If user_A or user_B is not in network, return False.
 def count_common_connections(network, user_A, user_B):
-    return 0
+    if user_A not in network or user_B not in network:
+        return False
+    count = 0
+    for connection in network[user_A][key_connections]:
+        if connection in network[user_B][key_connections]:
+            count = count + 1
+    return count
 
 
 # -----------------------------------------------------------------------------
