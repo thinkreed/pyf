@@ -146,7 +146,7 @@ def create_empty_user_information_dictionary():
 def get_connections(network, user):
     if user in network:
         return network[user][key_connections]
-    return []
+    return None
 
 
 # -----------------------------------------------------------------------------
@@ -164,7 +164,7 @@ def get_connections(network, user):
 def get_games_liked(network, user):
     if user in network:
         return network[user][key_likes]
-    return []
+    return None
 
 
 # -----------------------------------------------------------------------------
@@ -184,10 +184,10 @@ def get_games_liked(network, user):
 def add_connection(network, user_A, user_B):
     if user_A not in network or user_B not in network:
         return False
-    if user_A in network[user_B][key_connections]:
+    if user_B in network[user_A][key_connections]:
         return network
 
-    network[user_B][key_connections].append(user_A)
+    network[user_A][key_connections].append(user_B)
 
     return network
 
@@ -241,11 +241,16 @@ def get_secondary_connections(network, user):
     result = []
     for connection in network[user][key_connections]:
         if connection in network:
-            result = result + network[connection][key_connections]
+            result = merge_list(result, network[connection][key_connections])
 
     return result
 
 
+def merge_list(p1, p2):
+    for e in p2:
+        if e not in p1:
+            p1.append(e)
+    return p1
 # -----------------------------------------------------------------------------
 # count_common_connections(network, user_A, user_B):
 #   Finds the number of people that user_A and user_B have in common.
@@ -300,9 +305,21 @@ def count_common_connections(network, user_A, user_B):
 #   in this procedure to keep track of nodes already visited in your search. You
 #   may safely add default parameters since all calls used in the grading script
 #   will only include the arguments network, user_A, and user_B.
-def find_path_to_friend(network, user_A, user_B):
+def find_path_to_friend(network, user_A, user_B, nodes = None):
     # your RECURSIVE solution here!
-    return None
+    if user_A not in network or user_B not in network:
+        return None
+    if nodes is None:
+        nodes = []
+    nodes += [user_A]
+    if user_B in network[user_A][key_connections]:
+        return [user_A, user_B]
+
+    for connection in network[user_A][key_connections]:
+        if connection not in nodes:
+            new_path = find_path_to_friend(network, connection, user_B, nodes)
+            if new_path:
+                return [user_A] + new_path
 
 
 # Make-Your-Own-Procedure (MYOP)
@@ -314,18 +331,6 @@ def find_path_to_friend(network, user_A, user_B):
 
 # Replace this with your own procedure! You can also uncomment the lines below
 # to see how your code behaves. Have fun!
-net = create_data_structure('')
-print(net)
-net = create_data_structure('haha')
-print(net)
-net = create_data_structure(example_input)
-print(net)
-print(get_connections(net, "Debra"))
-print(get_connections(net, "Mercedes"))
-print(get_games_liked(net, "John"))
-print(add_connection(net, "John", "Freda"))
-print(add_new_user(net, "Debra", []))
-print(add_new_user(net, "Nick", ["Seven Schemers", "The Movie: The Game"]))  # True
-print(get_secondary_connections(net, "John"))
-print(count_common_connections(net, "Mercedes", "John"))
-print(find_path_to_friend(net, "John", "Ollie"))
+network = create_data_structure(example_input)
+path = find_path_to_friend(network, 'John', 'Levi')
+print(path)
