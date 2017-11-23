@@ -110,11 +110,11 @@ def create_data_structure(string_input):
             network[user_name] = create_empty_user_information_dictionary()
 
         if index_of_connection != -1:
-            connections = sentence[index_of_connection + len(connect_pattern) + 1:].split(',')
+            connections = sentence[index_of_connection + len(connect_pattern) + 1:].split(', ')
             network[user_name][key_connections] = network[user_name][key_connections] + connections
 
         if index_of_like != -1:
-            likes = sentence[index_of_like + len(like_pattern) + 1:].split(',')
+            likes = sentence[index_of_like + len(like_pattern) + 1:].split(', ')
             network[user_name][key_likes] = network[user_name][key_likes] + likes
 
     return network
@@ -326,6 +326,6 @@ print(get_games_liked(net, "John"))
 print(add_connection(net, "John", "Freda"))
 print(add_new_user(net, "Debra", []))
 print(add_new_user(net, "Nick", ["Seven Schemers", "The Movie: The Game"]))  # True
-print(get_secondary_connections(net, "Mercedes"))
+print(get_secondary_connections(net, "John"))
 print(count_common_connections(net, "Mercedes", "John"))
 print(find_path_to_friend(net, "John", "Ollie"))
