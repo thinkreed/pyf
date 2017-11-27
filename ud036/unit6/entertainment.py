@@ -7,3 +7,4 @@ toy_story = media.Movie('Toy Story',
                         'https://www.youtube.com/watch?v=vwyZH85NQC4')
 
 print(toy_story.storyline)
+toy_story.show_trailer()
