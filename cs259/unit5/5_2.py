@@ -38,6 +38,7 @@ class Range:
 
     # Invoke this for every value
     def track(self, value):
+        pass
 
     # YOUR CODE
 
@@ -55,8 +56,7 @@ class Invariants:
 
     def track(self, frame, event, arg):
         if event == "call" or event == "return":
-
-    # YOUR CODE HERE.
+            pass
     # MAKE SURE TO TRACK ALL VARIABLES AND THEIR VALUES
 
     def __repr__(self):
