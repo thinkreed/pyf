@@ -46,8 +46,12 @@ def start():
 
 
 def parse_books(books):
+    i = 0
     for book_name, book_url in books.items():
-        workers.get_worker().submit(parse_book, book_name, book_url)
+        if i >= 1:
+            break
+        parse_book(book_name, book_url)
+        i += 1
 
 
 def parse_book(book_name, book_url):
@@ -58,7 +62,27 @@ def parse_book(book_name, book_url):
     }
     response = requests.get(book_url, headers=headers)
     chapters = get_all_chapters(response)
-    print(chapters)
+    parse_chapter(chapters)
+
+
+def parse_chapter(chapters):
+    i = 0
+    for chapter_name, chapter_url in chapters.items():
+        if i >= 1:
+            break
+        get_chapter_content(chapter_name, chapter_url)
+        i += 1
+
+
+def get_chapter_content(chapter_name, chapter_url):
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+    }
+    response = requests.get(chapter_url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html5lib')
+    print(soup.find(name='div', id='content').text)
 
 
 def get_all_chapters(response):
