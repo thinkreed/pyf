@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 import json
 import os
 from workers import Workers
+import re
+
+output_directory = '../output/'
 
 
 def get_all_books(response):
@@ -14,9 +17,9 @@ def get_all_books(response):
     return books
 
 
-def temp():
-    if not os.path.exists('../output/'):
-        os.makedirs('../output/')
+def check_directory(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 
 def load_from_json_file(path):
@@ -62,27 +65,34 @@ def parse_book(book_name, book_url):
     }
     response = requests.get(book_url, headers=headers)
     chapters = get_all_chapters(response)
-    parse_chapter(chapters)
+    parse_chapter(chapters, book_name)
 
 
-def parse_chapter(chapters):
-    i = 0
+def parse_chapter(chapters, book_name):
+    book_directory = output_directory + '/' + book_name
+    check_directory(book_directory)
     for chapter_name, chapter_url in chapters.items():
-        if i >= 1:
-            break
-        get_chapter_content(chapter_name, chapter_url)
-        i += 1
+        get_chapter_content(chapter_name, chapter_url, book_directory)
+        
 
-
-def get_chapter_content(chapter_name, chapter_url):
+def get_chapter_content(chapter_name, chapter_url, book_directory):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-        'Accept-Encoding': 'gzip, deflate, br',
     }
     response = requests.get(chapter_url, headers=headers)
-    soup = BeautifulSoup(response.text, 'html5lib')
-    print(soup.find(name='div', id='content').text)
+    soup = BeautifulSoup(response.text, 'lxml')
+    div_content = soup.find('div', id="content")
+    pattern = r'<div id="content">(.*?)</div>'
+    try:
+        content = re.findall(pattern, str(div_content), re.S)[0]
+        content = content.replace('<br/>　　<br/>', '\n')
+        content = content.replace('<script>chaptererror();</script>', '')
+        content.strip()
+        file_path = book_directory + '/' + chapter_name + '.txt'
+        with open(file_path, 'w', encoding='utf-8', errors='ignore') as f:
+            f.write(content)
+    except:
+        print('re fail in %s' % chapter_name)
 
 
 def get_all_chapters(response):
