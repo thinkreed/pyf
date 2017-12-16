@@ -4,8 +4,9 @@ import json
 import os
 from workers import Workers
 import re
+from pymongo import MongoClient
 
-output_directory = '../output/'
+
 
 
 def get_all_books(response):
@@ -49,12 +50,8 @@ def start():
 
 
 def parse_books(books):
-    i = 0
     for book_name, book_url in books.items():
-        if i >= 1:
-            break
         parse_book(book_name, book_url)
-        i += 1
 
 
 def parse_book(book_name, book_url):
@@ -65,7 +62,7 @@ def parse_book(book_name, book_url):
     }
     response = requests.get(book_url, headers=headers)
     chapters = get_all_chapters(response)
-    parse_chapter(chapters, book_name)
+    dump_to_json_file(output_directory + '/' + book_name + '.json', chapters)
 
 
 def parse_chapter(chapters, book_name):
@@ -73,7 +70,7 @@ def parse_chapter(chapters, book_name):
     check_directory(book_directory)
     for chapter_name, chapter_url in chapters.items():
         get_chapter_content(chapter_name, chapter_url, book_directory)
-        
+
 
 def get_chapter_content(chapter_name, chapter_url, book_directory):
     headers = {
