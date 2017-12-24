@@ -26,4 +26,3 @@ if people <= dogs:
 
 if people == dogs:
     print("people are dogs")
-    
