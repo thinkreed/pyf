@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>My flask app</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        {% if greeting %}
+            I just wanted to say
+            <em style="color:green; font-size:2em;">{{greeting}}</em>
+        {% else %}
+            <em>Hello</em>, world!
+        {% endif %}
+    </body>
+</html>
