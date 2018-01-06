@@ -11,4 +11,5 @@ import scrapy
 class ReedBookServerItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    url = scrapy.Field()
+    book_name = scrapy.Field()
+    book_sites = scrapy.Field()

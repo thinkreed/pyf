@@ -1,4 +1,3 @@
-import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from reed_book_server.items import ReedBookServerItem
@@ -15,5 +14,7 @@ class BookSpider(CrawlSpider):
 
     def parse_item(self, response):
         item = ReedBookServerItem()
-        item['url'] = response.url
+        item['book_name'] = response.xpath("//div[@id='info']//h1/text()").extract()[0]
+        item['book_sites'] = {}
+        item['book_sites']['笔趣阁'] = response.url
         return item
