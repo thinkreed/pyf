@@ -15,6 +15,7 @@ class BookSpider(CrawlSpider):
     def parse_item(self, response):
         item = ReedBookServerItem()
         item['book_name'] = response.xpath("//div[@id='info']//h1/text()").extract()[0]
+        item['author_name'] = response.xpath("//span[@class='item item']//a/text()").extract()[0]
         item['book_sites'] = {}
         item['book_sites']['笔趣阁'] = response.url
         return item
