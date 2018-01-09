@@ -25,14 +25,14 @@ class BookSpider(CrawlSpider):
         item['book_sites']['name'] = '笔趣阁'
         item['book_sites']['chapters'] = []
         i = 0
-        for chunk in chunker(response.xpath("//div[@class='book_list']//ul//li//a").extract(), 4):
-            for a_tag in reversed(chunk):
-                a_selector = Selector(text=a_tag)
-                chapter = {}
-                chapter['index'] = i
-                chapter['url'] = response.url + a_selector.xpath("//a/@href").extract_first()
-                chapter['title'] = a_selector.xpath("//a//text()").extract_first()
-                item['book_sites']['chapters'].append(chapter)
-                i += 1
+        for a_tag in [item for chunk in chunker(response.xpath("//div[@class='book_list']//ul//li//a").extract(), 4) for
+                      item in chunk]:
+            a_selector = Selector(text=a_tag)
+            chapter = {}
+            chapter['index'] = i
+            chapter['url'] = response.url + a_selector.xpath("//a/@href").extract_first()
+            chapter['title'] = a_selector.xpath("//a//text()").extract_first()
+            item['book_sites']['chapters'].append(chapter)
+            i += 1
 
         return item
