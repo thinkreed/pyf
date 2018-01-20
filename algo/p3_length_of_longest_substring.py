@@ -7,7 +7,7 @@ class Solution:
         pass_dict = {}
         longest_length = substring_start = 0
         for i, c in enumerate(s):
-            if c in pass_dict and substring_start < pass_dict[c]:
+            if c in pass_dict and substring_start <= pass_dict[c]:
                 substring_start = pass_dict[c] + 1
             else:
                 longest_length = max(longest_length, i - substring_start + 1)
