@@ -1,9 +1,24 @@
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+    def insert(self, val):
+        if val < self.val:
+            if not self.left:
+                self.left = TreeNode(val)
+            else:
+                self.left.insert(val)
+        elif val > self.val:
+            if not self.right:
+                self.right = TreeNode(val)
+            else:
+                self.right.insert(val)
+        else:
+            self.val = val
+
 
 class Solution:
     def findMode(self, root):
@@ -32,7 +47,7 @@ class Solution:
         if self.current_count > self.max_count:
             self.max_count = self.current_count
         elif self.current_count == self.max_count:
-            if self.modes:
+            if self.modes is not None:
                 self.modes.append(self.current_val)
 
     def in_order_traversal(self, root):
@@ -42,3 +57,10 @@ class Solution:
         self.in_order_traversal(root.left)
         self.count(root.val)
         self.in_order_traversal(root.right)
+
+
+root = TreeNode(1)
+root.right = TreeNode(2)
+root.right.left = TreeNode(2)
+
+print(Solution().findMode(root))
