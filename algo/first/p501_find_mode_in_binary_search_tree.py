@@ -26,10 +26,10 @@ class Solution:
         :type root: TreeNode
         :rtype: List[int]
         """
-        self.in_order_traversal(root)
+        self.morris_in_order_traversal(root)
         self.modes = []
         self.current_count = 0
-        self.in_order_traversal(root)
+        self.morris_in_order_traversal(root)
         return self.modes
 
     def __init__(self):
@@ -57,6 +57,24 @@ class Solution:
         self.in_order_traversal(root.left)
         self.count(root.val)
         self.in_order_traversal(root.right)
+
+    def morris_in_order_traversal(self, root):
+        current = root
+        while current:
+            if not current.left:
+                self.count(current.val)
+                current = current.right
+            else:
+                previous = current.left
+                while previous.right and previous.right != current:
+                    previous = previous.right
+                if not previous.right:
+                    previous.right = current
+                    current = current.left
+                else:
+                    previous.right = None
+                    self.count(current.val)
+                    current = current.right
 
 
 root = TreeNode(1)
