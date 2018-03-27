@@ -19,3 +19,13 @@ class Solution:
                 dp[i] = dp[i] or dp[i - num]
 
         return dp[s]
+
+    def can_partition(self, nums):
+        s = 0
+        bits = 1
+
+        for num in nums:
+            s += num
+            bits |= bits << num
+
+        return not (s & 1) and ((bits >> (s >> 1)) & 1) == 1
