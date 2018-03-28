@@ -10,7 +10,17 @@ class Solution:
         slots = Counter(nums)
         rob_previous = 0
         rob_current = 0
-        for val in range(10001):
-            rob_previous, rob_current = rob_current, max(rob_previous + val * slots[val], rob_current)
+        last = None
+        for val in sorted(slots):
+            max_last = max(rob_previous, rob_current)
+
+            if val - 1 != last:
+                rob_current = val * slots[val] + max_last
+                rob_previous = max_last
+            else:
+                rob_current = val * slots[val] + rob_previous
+                rob_previous = max_last
+
+            last = val
 
         return max(rob_previous, rob_current)
