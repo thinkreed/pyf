@@ -10,10 +10,11 @@ class Solution(object):
         :type head: ListNode
         :rtype: ListNode
         """
-        if not head or not head.next:
-            return head
-        node = head.next
-        newHead = self.reverseList(node)
-        node.next = head
-        head.next = None
-        return newHead
+        pre = None
+        while head:
+            node = head.next
+            head.next = pre
+            pre = head
+            head = node
+
+        return pre
