@@ -21,7 +21,7 @@ class MyQueue(object):
         :rtype: int
         """
         self.helper()
-        self.b.pop()
+        return self.b.pop()
 
     def peek(self):
         """
@@ -36,7 +36,7 @@ class MyQueue(object):
         Returns whether the queue is empty.
         :rtype: bool
         """
-        return not self.a and not self.b
+        return (not self.a) and (not self.b)
 
     def helper(self):
         if not self.b:
