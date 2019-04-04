@@ -21,7 +21,7 @@ class Solution(object):
         while q:
             for i in range(len(q)):
                 node = q.pop(0)
-                
+
                 if node.left:
                     q.append(node.left)
 
